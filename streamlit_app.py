@@ -8,14 +8,17 @@ if "shopping_list" not in st.session_state:
 st.title("Lista zakupów 🛒")
 
 with st.form("add_form"):
-    new_item = st.text_input("Nazwa produktu", key="new_item_input")
+    # --- FIX: Removed the 'key' from st.text_input ---
+    new_item = st.text_input("Nazwa produktu")
     submitted = st.form_submit_button("Dodaj")
     if submitted:
         item = new_item.strip()
         if item:
             st.session_state["shopping_list"].append(item)
-            st.session_state["new_item_input"] = ""  # bezpieczne: wykonujemy to po submit
+            # --- FIX: This line is no longer needed and has been removed ---
+            # st.session_state["new_item_input"] = "" 
             st.success(f"Dodano: {item}")
+            st.experimental_rerun() # Good practice to rerun after modifying state
         else:
             st.warning("Wpisz nazwę produktu przed dodaniem.")
 
@@ -24,6 +27,7 @@ st.markdown("---")
 if st.button("Wyczyść listę"):
     st.session_state["shopping_list"] = []
     st.info("Lista została wyczyszczona.")
+    st.experimental_rerun() # Rerun to show the updated empty list immediately
 
 st.header("Twoja lista")
 if st.session_state["shopping_list"]:
