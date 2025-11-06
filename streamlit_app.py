@@ -15,7 +15,7 @@ with col1:
         item = new_item.strip()
         if item:
             st.session_state["items"].append(item)
-            st.session_state.new_item_input = ""  # wyczyść pole
+            st.session_state["new_item_input"] = ""  # wyczyść pole
             st.success(f'Dodano: {item}')
         else:
             st.warning("Wpisz nazwę produktu przed dodaniem.")
