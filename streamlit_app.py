@@ -1,13 +1,40 @@
 import streamlit as st
+import time
+
+gradients = [
+    "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+    "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
+    "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+    "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+    "linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)"
+]
+
+change_frequency = 3  
+
+gradient_js = f"""
+<script>
+let gradients = {gradients};
+let currentIndex = 0;
+
+function changeGradient() {{
+    currentIndex = (currentIndex + 1) % gradients.length;
+    document.querySelector('.stApp').style.background = gradients[currentIndex];
+}}
+
+setInterval(changeGradient, {change_frequency * 1000});
+</script>
+"""
 
 st.markdown(
-    """
+    f"""
     <style>
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    .stApp {{
+        background: {gradients[0]};
         background-attachment: fixed;
-    }
+        transition: background 1s ease;
+    }}
     </style>
+    {gradient_js}
     """,
     unsafe_allow_html=True
 )
