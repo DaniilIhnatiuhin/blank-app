@@ -1,13 +1,10 @@
 import streamlit as st
 
-# Title of the application
 st.title("Lista Zakupów")
 
-# Initialize the shopping list with quantities
 if 'shopping_list' not in st.session_state:
     st.session_state.shopping_list = {}
 
-# Function to add products
 def add_item():
     item = st.session_state.new_item.strip().lower()  # Convert to lowercase for consistency
     if item:
@@ -21,11 +18,9 @@ def add_item():
     else:
         st.warning("Wprowadź nazwę produktu.")
 
-# Function to remove products
 def remove_item():
-    # Extract the product name from the formatted string
-    selected_option = st.session_state.item_to_remove
-    item = selected_option.split(" (")[0].lower()  # Extract "mleko" from "Mleko (Ilość: 3)"
+    item = st.session_state.item_to_remove
+    item = item.split(" (")[0].lower()  # Extract "mleko" from "Mleko (Ilość: 3)"
 
     if item in st.session_state.shopping_list:
         if st.session_state.shopping_list[item] > 1:
@@ -35,10 +30,8 @@ def remove_item():
             del st.session_state.shopping_list[item]
             st.warning(f"Usunięto produkt: {item}")
 
-# Input field for adding new products
 st.text_input("Dodaj nowy produkt:", key="new_item", on_change=add_item)
 
-# Display the shopping list
 st.write("Twoja lista zakupów:")
 if not st.session_state.shopping_list:
     st.info("Lista zakupów jest pusta.")
@@ -46,9 +39,7 @@ else:
     for item, quantity in st.session_state.shopping_list.items():
         st.write(f"- {item} (Ilość: {quantity})")
 
-# Selector for removing products
 if st.session_state.shopping_list:
-    # Format options to include quantities
     options = [f"{item} (Ilość: {quantity})" for item, quantity in st.session_state.shopping_list.items()]
     st.selectbox(
         "Wybierz produkt do usunięcia:",
