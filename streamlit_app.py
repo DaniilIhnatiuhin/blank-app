@@ -12,25 +12,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-dynamic_gradient_js = """
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.body.addEventListener('mousemove', function(e) {
-            const x = e.clientX;
-            const y = e.clientY;
-            const xPercent = (x / window.innerWidth) * 100;
-            const yPercent = (y / window.innerHeight) * 100;
-
-            document.body.style.background =
-                `radial-gradient(circle at ${xPercent}% ${yPercent}%,
-                #ff9a9e, #fad0c4, #a6c1ee, #84fab0, #8fd3f4)`;
-        });
-    });
-</script>
-"""
-
-st.components.v1.html(dynamic_gradient_js)
-
 st.title("Lista Zakupów")
 
 if 'shopping_list' not in st.session_state:
