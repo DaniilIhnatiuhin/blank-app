@@ -1,45 +1,35 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
-dynamic_gradient_html = """
-<!DOCTYPE html>
-<html>
-<head>
+st.markdown(
+    """
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            transition: background 0.1s ease;
-        }
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background-attachment: fixed;
+    }
     </style>
-</head>
-<body>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('mousemove', function(e) {
-                const x = e.clientX;
-                const y = e.clientY;
-                const xPercent = Math.round((x / window.innerWidth) * 100);
-                const yPercent = Math.round((y / window.innerHeight) * 100);
+    """,
+    unsafe_allow_html=True
+)
 
-                document.body.style.background =
-                    `radial-gradient(circle at ${xPercent}% ${yPercent}%,
-                    #ff9a9e, #fad0c4, #a6c1ee, #84fab0, #8fd3f4)`;
-            });
+dynamic_gradient_js = """
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('mousemove', function(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            const xPercent = (x / window.innerWidth) * 100;
+            const yPercent = (y / window.innerHeight) * 100;
+
+            document.body.style.background =
+                `radial-gradient(circle at ${xPercent}% ${yPercent}%,
+                #ff9a9e, #fad0c4, #a6c1ee, #84fab0, #8fd3f4)`;
         });
-    </script>
-</body>
-</html>
+    });
+</script>
 """
 
-components.html(dynamic_gradient_html, height=1000, width=1000)
+st.components.v1.html(dynamic_gradient_js)
 
 st.title("Lista Zakupów")
 
