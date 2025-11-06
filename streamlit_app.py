@@ -37,7 +37,7 @@ if st.session_state.items:
         else:
             st.warning("Żaden produkt nie został zaznaczony.")
     st.write("Aktualna lista:")
-    for i, it in enumerate(st.session_state.items, start=1):
+    for i, it in enumerate(st.session_state["items"], start=1):
         st.write(f"{i}. {it}")
 else:
     st.info("Lista jest pusta. Dodaj pierwszy produkt powyżej.")
