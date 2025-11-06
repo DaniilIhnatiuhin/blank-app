@@ -1,41 +1,40 @@
 import streamlit as st
 
-st.set_page_config(page_title="Lista zakupów", page_icon="🛒")
+st.title("Lista Zakupów")
 
-if "shopping_list" not in st.session_state:
-    st.session_state["shopping_list"] = ["Chleb", "Mleko", "Jajka"]
+if 'shopping_list' not in st.session_state:
+    st.session_state.shopping_list = []
 
-st.title("Lista zakupów 🛒")
+def add_item():
+    item = st.session_state.new_item.strip()
+    if item and item not in st.session_state.shopping_list:
+        st.session_state.shopping_list.append(item)
+        st.session_state.new_item = ""
+        st.success(f"Dodano produkt: {item}")
+    elif item in st.session_state.shopping_list:
+        st.warning(f"Produkt '{item}' już istnieje na liście.")
 
-with st.form("add_form"):
-    # --- FIX: Removed the 'key' from st.text_input ---
-    new_item = st.text_input("Nazwa produktu")
-    submitted = st.form_submit_button("Dodaj")
-    if submitted:
-        item = new_item.strip()
-        if item:
-            st.session_state["shopping_list"].append(item)
-            # --- FIX: This line is no longer needed and has been removed ---
-            # st.session_state["new_item_input"] = "" 
-            st.success(f"Dodano: {item}")
-            st.experimental_rerun() # Good practice to rerun after modifying state
-        else:
-            st.warning("Wpisz nazwę produktu przed dodaniem.")
+def remove_item():
+    item = st.session_state.item_to_remove
+    if item in st.session_state.shopping_list:
+        st.session_state.shopping_list.remove(item)
+        st.warning(f"Usunięto produkt: {item}")
 
-st.markdown("---")
+st.text_input("Dodaj nowy produkt:", key="new_item", on_change=add_item)
 
-if st.button("Wyczyść listę"):
-    st.session_state["shopping_list"] = []
-    st.info("Lista została wyczyszczona.")
-    st.experimental_rerun() # Rerun to show the updated empty list immediately
-
-st.header("Twoja lista")
-if st.session_state["shopping_list"]:
-    for idx, it in enumerate(st.session_state["shopping_list"], start=1):
-        cols = st.columns([0.85, 0.15])
-        cols[0].write(f"{idx}. {it}")
-        if cols[1].button("Usuń", key=f"del_{idx}"):
-            st.session_state["shopping_list"].pop(idx - 1)
-            st.experimental_rerun()
+st.write("Twoja lista zakupów:")
+if not st.session_state.shopping_list:
+    st.info("Lista zakupów jest pusta.")
 else:
-    st.info("Lista jest pusta. Dodaj pierwszy produkt powyżej.")
+    for item in st.session_state.shopping_list:
+        st.write(f"- {item}")
+
+if st.session_state.shopping_list:
+    st.selectbox(
+        "Wybierz produkt do usunięcia:",
+        st.session_state.shopping_list,
+        key="item_to_remove"
+    )
+    st.button("Usuń produkt", on_click=remove_item)
+else:
+    st.warning("Nie ma produktów do usunięcia.")
