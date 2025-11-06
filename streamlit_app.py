@@ -1,12 +1,24 @@
 import streamlit as st
 
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background-attachment: fixed;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("Lista Zakupów")
 
 if 'shopping_list' not in st.session_state:
     st.session_state.shopping_list = {}
 
 def add_item():
-    item = st.session_state.new_item.strip().lower()  # Convert to lowercase for consistency
+    item = st.session_state.new_item.strip().lower()
     if item:
         if item in st.session_state.shopping_list:
             st.session_state.shopping_list[item] += 1
@@ -19,8 +31,9 @@ def add_item():
         st.warning("Wprowadź nazwę produktu.")
 
 def remove_item():
-    item = st.session_state.item_to_remove
-    item = item.split(" (")[0].lower()
+    selected_option = st.session_state.item_to_remove
+    item = selected_option.split(" (")[0].lower()
+
     if item in st.session_state.shopping_list:
         if st.session_state.shopping_list[item] > 1:
             st.session_state.shopping_list[item] -= 1
@@ -39,13 +52,12 @@ else:
         st.write(f"- {item} (Ilość: {quantity})")
 
 if st.session_state.shopping_list:
-    # Format options to include quantities
     options = [f"{item} (Ilość: {quantity})" for item, quantity in st.session_state.shopping_list.items()]
     st.selectbox(
         "Wybierz produkt do usunięcia:",
         options=options,
         key="item_to_remove",
-        format_func=lambda x: x  # Display the full string (e.g., "Mleko (Ilość: 3)")
+        format_func=lambda x: x
     )
     st.button("Usuń produkt", on_click=remove_item)
 else:
