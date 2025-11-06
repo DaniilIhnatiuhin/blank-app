@@ -1,43 +1,49 @@
 import streamlit as st
-import time
+import streamlit.components.v1 as components
 
-gradients = [
-    "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-    "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
-    "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-    "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
-    "linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%)"
-]
-
-change_frequency = 3  
-
-gradient_js = f"""
+dynamic_gradient_js = """
 <script>
-let gradients = {gradients};
-let currentIndex = 0;
+    // Function to update gradient based on cursor position
+    function updateGradient(e) {
+        const x = e.clientX || e.touches[0].clientX;
+        const y = e.clientY || e.touches[0].clientY;
+        const xPercent = (x / window.innerWidth) * 100;
+        const yPercent = (y / window.innerHeight) * 100;
 
-function changeGradient() {{
-    currentIndex = (currentIndex + 1) % gradients.length;
-    document.querySelector('.stApp').style.background = gradients[currentIndex];
-}}
+        // Update the gradient based on cursor position
+        document.body.style.background =
+            `radial-gradient(circle at ${xPercent}% ${yPercent}%,
+            #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #84fab0, #8fd3f4)`;
+    }
 
-setInterval(changeGradient, {change_frequency * 1000});
+    // Set the frequency of gradient updates (e.g., every 100ms)
+    const frequency = 100; // in milliseconds
+
+    // Add event listeners for mouse and touch movements
+    document.addEventListener('mousemove', updateGradient);
+    document.addEventListener('touchmove', updateGradient);
+
+    // Optional: Throttle the event listener to control frequency
+    let lastUpdate = 0;
+    document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastUpdate >= frequency) {
+            updateGradient(e);
+            lastUpdate = now;
+        }
+    });
 </script>
+
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background-attachment: fixed;
+        transition: background 0.3s ease;
+    }
+</style>
 """
 
-st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background: {gradients[0]};
-        background-attachment: fixed;
-        transition: background 1s ease;
-    }}
-    </style>
-    {gradient_js}
-    """,
-    unsafe_allow_html=True
-)
+components.html(f"<div>{dynamic_gradient_js}</div>", height=0)
 
 st.title("Lista Zakupów")
 
