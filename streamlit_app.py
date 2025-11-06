@@ -20,7 +20,7 @@ def add_item():
 
 def remove_item():
     item = st.session_state.item_to_remove
-    item = selected_option.split(" (")[0].lower()
+    item = item.split(" (")[0].lower()
     if item in st.session_state.shopping_list:
         if st.session_state.shopping_list[item] > 1:
             st.session_state.shopping_list[item] -= 1
